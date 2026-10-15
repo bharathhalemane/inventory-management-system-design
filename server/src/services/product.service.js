@@ -1,11 +1,17 @@
+const mongoose = require('mongoose');
 const Product = require('../models/Product');
+const InventoryRecord = require('../models/InventoryRecord');
 const AppError = require('../utils/AppError');
 const escapeRegex = require('../utils/escapeRegex');
 
 
 const createProduct = async (data) => {
     try{
-        return await Product.create(data);
+        return await mongoose.connection.transaction(async (session) => {
+            const [product] = await Product.create([data], { session });
+            await InventoryRecord.create([{ productId: product._id, quantity: 0 }], { session });
+            return product;
+        });
     } catch (err) {
         if (err.code === 11000) {
             const sku = err.keyValue?.sku ?? data.sku;

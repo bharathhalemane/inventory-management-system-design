@@ -1,5 +1,5 @@
 const AppError = require('../utils/AppError');
-const { validateBodyFields } = require('../middleware/validate');
+const { validateBodyFields, readInt } = require('../middleware/validate');
 
 const CREATE_FIELDS = ['sku', 'name', 'description', 'category', 'priceMinor', 'currency'];
 const UPDATE_FIELDS = ['name', 'description', 'category', 'priceMinor', 'currency','status'];
@@ -32,21 +32,6 @@ const validateUpdateProduct = [
     }),
     checkProductTypes,
 ];
-
-const readInt = (raw, { name, defaultValue, min, max }) => {
-    if (raw === undefined) return defaultValue;
-
-    if (typeof raw !== 'string' || !/^\d+$/.test(raw)) {
-        throw new AppError(400, 'INVALID_QUERY', `"${name}" must be a whole number`);
-    }
-
-    const n = Number(raw);
-    if(n<min || n > max){
-        throw new AppError(400, 'INVALID_QUERY', `"${name}" must be between ${min} and ${max}`);
-    }
-
-    return n;
-}
 
 const readString = (raw, name) => {
     if(raw === undefined) return undefined;

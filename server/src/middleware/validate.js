@@ -44,4 +44,28 @@ const validateBodyFields=({ allowed, immutable = [], requireAtLeastOne = false }
     };
 }
 
-module.exports = { validateObjectId, validateBodyFields };
+
+const readInt = (raw, { name, defaultValue, min, max }) => {
+    if (raw === undefined) return defaultValue;
+    if (typeof raw !== 'string' || !/^\d+$/.test(raw)) {
+        throw new AppError(400, 'INVALID_QUERY', `"${name}" must be a whole number`);
+    }
+
+    const n = Number(raw);
+    if (n < min || n > max) {
+        throw new AppError(400, 'INVALID_QUERY', `"${name}" must be between ${min} and ${max}`);
+    }
+    return n;
+}
+
+const parsePagination = (req, res, next) => {
+    const page = readInt(req.query.page, {
+        name: 'page', defaultValue: 1, min: 1, max: 10000
+    });
+    const limit = readInt(req.query.limit, { name: 'limit', defaultValue: 20, min: 1, max: 100 });
+    req.pagination = {page, limit};
+    next();
+        
+}
+
+module.exports = { validateObjectId, validateBodyFields, readInt, parsePagination };

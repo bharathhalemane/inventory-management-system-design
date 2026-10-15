@@ -1,9 +1,13 @@
 const config = require('./config/env');
 const app = require('./app.js');
 const { connectDB, disconnectDB } = require('./config/db.js');
+const Product = require('./models/Product');
+const InventoryRecord = require('./models/InventoryRecord');
+const StockMovement = require('./models/StockMovement');
 
 const start = async () => {
     await connectDB();
+    await Promise.all([Product.init(), InventoryRecord.init(), StockMovement.init()]);
 
     const server = app.listen(config.port, () => {
         console.log(`[server] listening on http://localhost:${config.port} (${config.env})`);
@@ -14,7 +18,7 @@ const start = async () => {
     const shutdown = (signal) => {
         if (shuttingDown) return;
         shuttingDown = true;
-        console.lg(`[server] ${signal} received, shutting down gracefully`);
+        console.log(`[server] ${signal} received, shutting down gracefully`);
         
         server.close(async () => {
             await disconnectDB();

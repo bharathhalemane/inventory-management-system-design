@@ -8,7 +8,7 @@ const errorHandler = (err, req, res, next) => {
     let statusCode = err.statusCode || err.status || 500;
     let code = err.isOperational ? err.code : null;
     let message = err.message;
-    let details;    
+    let details = err.isOperational ? err.details : undefined;    
     
     if(err.name === 'ValidationError' && err.errors){
         statusCode = 400;
