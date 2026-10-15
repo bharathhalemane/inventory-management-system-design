@@ -26,4 +26,4 @@ const checkStockBody = (req, res, next) => {
 
 const validateStockChange = [validateBodyFields({ allowed: ['quantity', 'reason'] }), checkStockBody];
 
-module.exports = { validateStockChange };
+module.exports = { validateStockChange , checkStockBody};

@@ -1,0 +1,602 @@
+﻿
+> server@1.0.0 test
+> node --test --test-concurrency=1
+
+TAP version 13
+# [db] connected to database "inventory_test"
+# Subtest: Products API
+    # Subtest: creation
+        # Subtest: creates a product with normalized fields and defaults
+        ok 1 - creates a product with normalized fields and defaults
+          ---
+          duration_ms: 101.4086
+          type: 'test'
+          ...
+        # Subtest: creates an inventory record with quantity 0 alongside the product
+        ok 2 - creates an inventory record with quantity 0 alongside the product
+          ---
+          duration_ms: 34.3471
+          type: 'test'
+          ...
+# [error] Error: simulated failure
+#     at Function.<anonymous> (C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\tests\\products.test.js:49:15)
+#     at Object.apply (node:internal/test_runner/mock/mock:765:20)
+#     at C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\src\\services\\product.service.js:12:35
+#     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+#     at async _wrapUserTransaction (C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\node_modules\\mongoose\\lib\\connection.js:755:9)
+#     at async ClientSession.withTransaction (C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\node_modules\\mongodb\\lib\\sessions.js:567:30)
+#     at async Object.createProduct (C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\src\\services\\product.service.js:10:16)
+#     at async create (C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\src\\controllers\\product.controller.js:4:21)
+        # Subtest: rolls back the product if the inventory record cannot be created
+        ok 3 - rolls back the product if the inventory record cannot be created
+          ---
+          duration_ms: 33.0875
+          type: 'test'
+          ...
+        1..3
+    ok 1 - creation
+      ---
+      duration_ms: 170.1945
+      type: 'suite'
+      ...
+    # Subtest: invalid input
+        # Subtest: rejects a missing name with 400 and stores nothing
+        ok 1 - rejects a missing name with 400 and stores nothing
+          ---
+          duration_ms: 19.4852
+          type: 'test'
+          ...
+        # Subtest: rejects a negative price with 400 and stores nothing
+        ok 2 - rejects a negative price with 400 and stores nothing
+          ---
+          duration_ms: 16.5045
+          type: 'test'
+          ...
+        # Subtest: rejects a fractional price with 400 and stores nothing
+        ok 3 - rejects a fractional price with 400 and stores nothing
+          ---
+          duration_ms: 14.0444
+          type: 'test'
+          ...
+        # Subtest: rejects a price given as a string with 400 and stores nothing
+        ok 4 - rejects a price given as a string with 400 and stores nothing
+          ---
+          duration_ms: 16.4326
+          type: 'test'
+          ...
+        # Subtest: rejects bad SKU characters with 400 and stores nothing
+        ok 5 - rejects bad SKU characters with 400 and stores nothing
+          ---
+          duration_ms: 39.7117
+          type: 'test'
+          ...
+        # Subtest: rejects a bad currency code with 400 and stores nothing
+        ok 6 - rejects a bad currency code with 400 and stores nothing
+          ---
+          duration_ms: 20.0887
+          type: 'test'
+          ...
+        # Subtest: rejects an unknown field (status) with 400 and stores nothing
+        ok 7 - rejects an unknown field (status) with 400 and stores nothing
+          ---
+          duration_ms: 9.227
+          type: 'test'
+          ...
+        # Subtest: rejects an unknown field (_id) with 400 and stores nothing
+        ok 8 - rejects an unknown field (_id) with 400 and stores nothing
+          ---
+          duration_ms: 9.5389
+          type: 'test'
+          ...
+        # Subtest: reports every field that failed validation
+        ok 9 - reports every field that failed validation
+          ---
+          duration_ms: 7.0148
+          type: 'test'
+          ...
+        # Subtest: rejects malformed JSON with 400
+        ok 10 - rejects malformed JSON with 400
+          ---
+          duration_ms: 6.7547
+          type: 'test'
+          ...
+        1..10
+    ok 2 - invalid input
+      ---
+      duration_ms: 160.3383
+      type: 'suite'
+      ...
+    # Subtest: duplicate SKUs
+        # Subtest: rejects the same SKU with 409
+        ok 1 - rejects the same SKU with 409
+          ---
+          duration_ms: 21.3579
+          type: 'test'
+          ...
+        # Subtest: treats SKUs that differ only by case or spaces as duplicates, leaving exactly one product
+        ok 2 - treats SKUs that differ only by case or spaces as duplicates, leaving exactly one product
+          ---
+          duration_ms: 24.3535
+          type: 'test'
+          ...
+        1..2
+    ok 3 - duplicate SKUs
+      ---
+      duration_ms: 45.9475
+      type: 'suite'
+      ...
+    # Subtest: reading
+        # Subtest: returns one product by id
+        ok 1 - returns one product by id
+          ---
+          duration_ms: 17.404
+          type: 'test'
+          ...
+        # Subtest: returns 400 for a malformed id and 404 for a missing one
+        ok 2 - returns 400 for a malformed id and 404 for a missing one
+          ---
+          duration_ms: 8.6239
+          type: 'test'
+          ...
+        # Subtest: paginates without overlap and reports totals
+        not ok 3 - paginates without overlap and reports totals
+          ---
+          duration_ms: 66.8171
+          type: 'test'
+          location: 'C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\tests\\products.test.js:126:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            Expected values to be strictly equal:
+            
+            undefined !== 3
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: 3
+          operator: 'strictEqual'
+          stack: |-
+            TestContext.<anonymous> (C:\Users\bhara\OneDrive\Desktop\system design\inventory management\server\tests\products.test.js:138:14)
+            process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        # Subtest: filters by category and by text
+        ok 4 - filters by category and by text
+          ---
+          duration_ms: 57.242
+          type: 'test'
+          ...
+        # Subtest: rejects a limit above 100 and treats search text literally
+        ok 5 - rejects a limit above 100 and treats search text literally
+          ---
+          duration_ms: 30.132
+          type: 'test'
+          ...
+        1..5
+    not ok 4 - reading
+      ---
+      duration_ms: 180.812
+      type: 'suite'
+      location: 'C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\tests\\products.test.js:108:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: updating and deactivating
+        # Subtest: updates only the fields that were sent
+        ok 1 - updates only the fields that were sent
+          ---
+          duration_ms: 42.4363
+          type: 'test'
+          ...
+        # Subtest: refuses to change the SKU
+        ok 2 - refuses to change the SKU
+          ---
+          duration_ms: 20.4953
+          type: 'test'
+          ...
+        # Subtest: rejects an empty update and invalid values, leaving the product unchanged
+        ok 3 - rejects an empty update and invalid values, leaving the product unchanged
+          ---
+          duration_ms: 30.8323
+          type: 'test'
+          ...
+        # Subtest: deactivates idempotently and hides the product from the default list
+        ok 4 - deactivates idempotently and hides the product from the default list
+          ---
+          duration_ms: 31.5766
+          type: 'test'
+          ...
+        # Subtest: returns 404 when updating or deactivating a missing product
+        ok 5 - returns 404 when updating or deactivating a missing product
+          ---
+          duration_ms: 10.9139
+          type: 'test'
+          ...
+        1..5
+    ok 5 - updating and deactivating
+      ---
+      duration_ms: 136.7862
+      type: 'suite'
+      ...
+# [db] disconnected
+    1..5
+not ok 1 - Products API
+  ---
+  duration_ms: 798.9975
+  type: 'suite'
+  location: 'C:\\Users\\bhara\\OneDrive\\Desktop\\system design\\inventory management\\server\\tests\\products.test.js:7:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# [db] connected to database "inventory_test"
+# Subtest: Stock API
+    # Subtest: adding stock
+        # Subtest: starts at zero
+        ok 1 - starts at zero
+          ---
+          duration_ms: 156.1183
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+        # Subtest: adds stock and records an IN movement
+        ok 2 - adds stock and records an IN movement
+          ---
+          duration_ms: 55.9741
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+        # Subtest: accumulates across several additions
+        ok 3 - accumulates across several additions
+          ---
+          duration_ms: 79.5657
+          type: 'test'
+          ...
+        1..3
+    ok 1 - adding stock
+      ---
+      duration_ms: 292.855
+      type: 'suite'
+      ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+    # Subtest: removing stock
+        # Subtest: decreases stock and records an OUT movement
+        ok 1 - decreases stock and records an OUT movement
+          ---
+          duration_ms: 69.5583
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+        # Subtest: allows removing exactly everything, then rejects one more
+        ok 2 - allows removing exactly everything, then rejects one more
+          ---
+          duration_ms: 60.9112
+          type: 'test'
+          ...
+        1..2
+    ok 2 - removing stock
+      ---
+      duration_ms: 130.8127
+      type: 'suite'
+      ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+    # Subtest: insufficient stock
+        # Subtest: rejects with 409, explains why, and changes nothing
+        ok 1 - rejects with 409, explains why, and changes nothing
+          ---
+          duration_ms: 85.2951
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+        # Subtest: rejects a removal when stock was never added
+        ok 2 - rejects a removal when stock was never added
+          ---
+          duration_ms: 33.181
+          type: 'test'
+          ...
+        1..2
+    ok 3 - insufficient stock
+      ---
+      duration_ms: 118.8921
+      type: 'suite'
+      ...
+    # Subtest: invalid requests
+        # Subtest: add: rejects a zero quantity and changes nothing
+        ok 1 - add: rejects a zero quantity and changes nothing
+          ---
+          duration_ms: 43.2855
+          type: 'test'
+          ...
+        # Subtest: add: rejects a negative quantity and changes nothing
+        ok 2 - add: rejects a negative quantity and changes nothing
+          ---
+          duration_ms: 48.811
+          type: 'test'
+          ...
+        # Subtest: add: rejects a fractional quantity and changes nothing
+        ok 3 - add: rejects a fractional quantity and changes nothing
+          ---
+          duration_ms: 56.0455
+          type: 'test'
+          ...
+        # Subtest: add: rejects a string quantity and changes nothing
+        ok 4 - add: rejects a string quantity and changes nothing
+          ---
+          duration_ms: 127.1693
+          type: 'test'
+          ...
+        # Subtest: add: rejects a null quantity and changes nothing
+        ok 5 - add: rejects a null quantity and changes nothing
+          ---
+          duration_ms: 101.6745
+          type: 'test'
+          ...
+        # Subtest: add: rejects a too large quantity and changes nothing
+        ok 6 - add: rejects a too large quantity and changes nothing
+          ---
+          duration_ms: 53.8628
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a zero quantity and changes nothing
+        ok 7 - remove: rejects a zero quantity and changes nothing
+          ---
+          duration_ms: 64.7406
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a negative quantity and changes nothing
+        ok 8 - remove: rejects a negative quantity and changes nothing
+          ---
+          duration_ms: 138.5272
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a fractional quantity and changes nothing
+        ok 9 - remove: rejects a fractional quantity and changes nothing
+          ---
+          duration_ms: 58.5838
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a string quantity and changes nothing
+        ok 10 - remove: rejects a string quantity and changes nothing
+          ---
+          duration_ms: 54.5596
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a null quantity and changes nothing
+        ok 11 - remove: rejects a null quantity and changes nothing
+          ---
+          duration_ms: 51.8883
+          type: 'test'
+          ...
+        # Subtest: remove: rejects a too large quantity and changes nothing
+        ok 12 - remove: rejects a too large quantity and changes nothing
+          ---
+          duration_ms: 60.095
+          type: 'test'
+          ...
+        # Subtest: rejects a request with no quantity
+        ok 13 - rejects a request with no quantity
+          ---
+          duration_ms: 28.1503
+          type: 'test'
+          ...
+        # Subtest: does not let the client choose who performed the change
+        ok 14 - does not let the client choose who performed the change
+          ---
+          duration_ms: 34.2601
+          type: 'test'
+          ...
+        1..14
+    ok 4 - invalid requests
+      ---
+      duration_ms: 923.9751
+      type: 'suite'
+      ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+    # Subtest: missing products
+        # Subtest: returns 404 for stock, add, remove and history of a product that does not exist
+        ok 1 - returns 404 for stock, add, remove and history of a product that does not exist
+          ---
+          duration_ms: 129.2293
+          type: 'test'
+          ...
+        # Subtest: returns 400 for a malformed product id
+        ok 2 - returns 400 for a malformed product id
+          ---
+          duration_ms: 37.4122
+          type: 'test'
+          ...
+        1..2
+    ok 5 - missing products
+      ---
+      duration_ms: 167.2454
+      type: 'suite'
+      ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+    # Subtest: inventory history
+        # Subtest: lists movements newest first, each starting where the previous one ended
+        ok 1 - lists movements newest first, each starting where the previous one ended
+          ---
+          duration_ms: 716.674
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+        # Subtest: paginates without overlap
+        ok 2 - paginates without overlap
+          ---
+          duration_ms: 559.7133
+          type: 'test'
+          ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+        # Subtest: always reconciles: total IN minus total OUT equals the current quantity
+        ok 3 - always reconciles: total IN minus total OUT equals the current quantity
+          ---
+          duration_ms: 669.137
+          type: 'test'
+          ...
+        1..3
+    ok 6 - inventory history
+      ---
+      duration_ms: 1946.2154
+      type: 'suite'
+      ...
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+# (node:7156) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+    # Subtest: atomicity
+        # Subtest: rolls back the stock change when the movement cannot be written
+        ok 1 - rolls back the stock change when the movement cannot be written
+          ---
+          duration_ms: 101.3613
+          type: 'test'
+          ...
+        1..1
+    ok 7 - atomicity
+      ---
+      duration_ms: 102.3016
+      type: 'suite'
+      ...
+# [db] disconnected
+    1..7
+ok 2 - Stock API
+  ---
+  duration_ms: 3799.3765
+  type: 'suite'
+  ...
+# Subtest: escapeRegex
+    # Subtest: escapes regular-expression metacharacters
+    ok 1 - escapes regular-expression metacharacters
+      ---
+      duration_ms: 3.3134
+      type: 'test'
+      ...
+    # Subtest: makes user input match literally
+    ok 2 - makes user input match literally
+      ---
+      duration_ms: 1.2327
+      type: 'test'
+      ...
+    # Subtest: leaves ordinary text unchanged
+    ok 3 - leaves ordinary text unchanged
+      ---
+      duration_ms: 1.4339
+      type: 'test'
+      ...
+    1..3
+ok 3 - escapeRegex
+  ---
+  duration_ms: 11.6184
+  type: 'suite'
+  ...
+# Subtest: checkStockBody
+    # Subtest: accepts quantity 1
+    ok 1 - accepts quantity 1
+      ---
+      duration_ms: 3.0364
+      type: 'test'
+      ...
+    # Subtest: accepts quantity 50
+    ok 2 - accepts quantity 50
+      ---
+      duration_ms: 2.2813
+      type: 'test'
+      ...
+    # Subtest: accepts quantity 1000000
+    ok 3 - accepts quantity 1000000
+      ---
+      duration_ms: 0.3155
+      type: 'test'
+      ...
+    # Subtest: rejects quantity 0
+    ok 4 - rejects quantity 0
+      ---
+      duration_ms: 0.5774
+      type: 'test'
+      ...
+    # Subtest: rejects quantity -1
+    ok 5 - rejects quantity -1
+      ---
+      duration_ms: 0.3314
+      type: 'test'
+      ...
+    # Subtest: rejects quantity 2.5
+    ok 6 - rejects quantity 2.5
+      ---
+      duration_ms: 0.3268
+      type: 'test'
+      ...
+    # Subtest: rejects quantity 5
+    ok 7 - rejects quantity 5
+      ---
+      duration_ms: 0.4942
+      type: 'test'
+      ...
+    # Subtest: rejects quantity null
+    ok 8 - rejects quantity null
+      ---
+      duration_ms: 1.3239
+      type: 'test'
+      ...
+    # Subtest: rejects quantity undefined
+    ok 9 - rejects quantity undefined
+      ---
+      duration_ms: 1.8334
+      type: 'test'
+      ...
+    # Subtest: rejects quantity 1000001
+    ok 10 - rejects quantity 1000001
+      ---
+      duration_ms: 1.0866
+      type: 'test'
+      ...
+    # Subtest: accepts a missing reason
+    ok 11 - accepts a missing reason
+      ---
+      duration_ms: 0.4459
+      type: 'test'
+      ...
+    # Subtest: rejects a reason that is not a string
+    ok 12 - rejects a reason that is not a string
+      ---
+      duration_ms: 0.5164
+      type: 'test'
+      ...
+    # Subtest: rejects a reason longer than 200 characters
+    ok 13 - rejects a reason longer than 200 characters
+      ---
+      duration_ms: 0.5118
+      type: 'test'
+      ...
+    1..13
+ok 4 - checkStockBody
+  ---
+  duration_ms: 21.6856
+  type: 'suite'
+  ...
+1..4
+# tests 68
+# suites 16
+# pass 67
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9817.6119
