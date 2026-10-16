@@ -1,0 +1,72 @@
+{
+  "label": "movements-before",
+  "takenAt": "2026-10-16T06:29:15.525Z",
+  "environment": {
+    "node": "v22.22.0",
+    "platform": "win32 10.0.26100",
+    "cpu": "Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz x4",
+    "memoryGB": 16,
+    "mongodb": "8.0.5"
+  },
+  "workload": {
+    "concurrency": 10,
+    "warmupSeconds": 5,
+    "durationSeconds": 10,
+    "loop": "closed",
+    "readOnly": true
+  },
+  "dataset": {
+    "database": "inventory_bench",
+    "products": 100000
+  },
+  "results": [
+    {
+      "scenario": "movements-hot-product",
+      "example": "/api/v1/products/00000000000000000000f550/movements",
+      "requests": 80,
+      "ok": 80,
+      "errorRatePercent": 0,
+      "throughputRps": 7.66,
+      "meanMs": 1299,
+      "p50Ms": 1108.14,
+      "p95Ms": 2551.18,
+      "p99Ms": 2686.95,
+      "maxMs": 2686.95,
+      "statuses": {
+        "200": 80
+      },
+      "dbOps": [
+        {
+          "op": "find inventoryrecords",
+          "calls": 100,
+          "avgMs": 0.06,
+          "maxMs": 1,
+          "avgDocsExamined": 1,
+          "plans": [
+            "IXSCAN { productId: 1 }"
+          ]
+        },
+        {
+          "op": "aggregate stockmovements",
+          "calls": 100,
+          "avgMs": 196.64,
+          "maxMs": 1269,
+          "avgDocsExamined": 148796,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "find stockmovements",
+          "calls": 100,
+          "avgMs": 269.91,
+          "maxMs": 1482,
+          "avgDocsExamined": 148796,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    }
+  ]
+}

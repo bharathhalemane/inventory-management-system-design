@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --test --test-concurrency=1",
     "dev" : "node --watch src/server.js",
-    "start" : "node src/server.js"
+    "start" : "node src/server.js",
+    "bench:seed":"node scripts/bench/seed.js",
+    "bench":"node scripts/bench/run.js"
   },
   "keywords": [],
   "author": "",

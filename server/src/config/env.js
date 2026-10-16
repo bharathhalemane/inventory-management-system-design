@@ -1,5 +1,5 @@
 // In tests, the environment comes only from .env.test (loaded by the test setup), never from .env.
-if (process.env.NODE_ENV !== 'test') {
+if (!['test', 'bench'].includes(process.env.NODE_ENV)) {
   require('dotenv').config();
 }
 const required = (name) => {

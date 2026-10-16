@@ -1,0 +1,280 @@
+{
+  "label": "baseline",
+  "takenAt": "2026-10-16T06:36:54.564Z",
+  "environment": {
+    "node": "v22.22.0",
+    "platform": "win32 10.0.26100",
+    "cpu": "Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz x4",
+    "memoryGB": 16,
+    "mongodb": "8.0.5"
+  },
+  "workload": {
+    "concurrency": 10,
+    "warmupSeconds": 5,
+    "durationSeconds": 20,
+    "loop": "closed",
+    "readOnly": true
+  },
+  "dataset": {
+    "database": "inventory_bench",
+    "products": 100000
+  },
+  "results": [
+    {
+      "scenario": "get-product-by-id",
+      "example": "/api/v1/products/00000000000000000000f4f4",
+      "requests": 10662,
+      "ok": 10662,
+      "errorRatePercent": 0,
+      "throughputRps": 532.83,
+      "meanMs": 18.75,
+      "p50Ms": 17.09,
+      "p95Ms": 27.93,
+      "p99Ms": 41.63,
+      "maxMs": 211.66,
+      "statuses": {
+        "200": 10662
+      },
+      "dbOps": [
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 0,
+          "maxMs": 0,
+          "avgDocsExamined": 1,
+          "plans": [
+            "EXPRESS_IXSCAN { _id: 1 }"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "get-stock",
+      "example": "/api/v1/products/00000000000000000000f4f4/stock",
+      "requests": 13867,
+      "ok": 13867,
+      "errorRatePercent": 0,
+      "throughputRps": 693.11,
+      "meanMs": 14.42,
+      "p50Ms": 13.62,
+      "p95Ms": 18.78,
+      "p99Ms": 31.46,
+      "maxMs": 53.55,
+      "statuses": {
+        "200": 13867
+      },
+      "dbOps": [
+        {
+          "op": "find inventoryrecords",
+          "calls": 100,
+          "avgMs": 0,
+          "maxMs": 0,
+          "avgDocsExamined": 1,
+          "plans": [
+            "EXPRESS_IXSCAN { productId: 1 }"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "movements-hot-product",
+      "example": "/api/v1/products/00000000000000000000f550/movements",
+      "requests": 6123,
+      "ok": 6123,
+      "errorRatePercent": 0,
+      "throughputRps": 305.84,
+      "meanMs": 32.68,
+      "p50Ms": 31.26,
+      "p95Ms": 42.47,
+      "p99Ms": 52.8,
+      "maxMs": 94.92,
+      "statuses": {
+        "200": 6123
+      },
+      "dbOps": [
+        {
+          "op": "find inventoryrecords",
+          "calls": 100,
+          "avgMs": 0,
+          "maxMs": 0,
+          "avgDocsExamined": 1,
+          "plans": [
+            "IXSCAN { productId: 1 }"
+          ]
+        },
+        {
+          "op": "find stockmovements",
+          "calls": 100,
+          "avgMs": 0,
+          "maxMs": 0,
+          "avgDocsExamined": 20,
+          "plans": [
+            "IXSCAN { productId: 1, createdAt: -1, _id: -1 }"
+          ]
+        },
+        {
+          "op": "aggregate stockmovements",
+          "calls": 100,
+          "avgMs": 0.93,
+          "maxMs": 1,
+          "avgDocsExamined": 0,
+          "plans": [
+            "COUNT_SCAN { productId: 1, createdAt: -1, _id: -1 }"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "list-first-page",
+      "example": "/api/v1/products?limit=20",
+      "requests": 180,
+      "ok": 180,
+      "errorRatePercent": 0,
+      "throughputRps": 8.67,
+      "meanMs": 1150.09,
+      "p50Ms": 1144.46,
+      "p95Ms": 1270.95,
+      "p99Ms": 1339.12,
+      "maxMs": 1355.25,
+      "statuses": {
+        "200": 180
+      },
+      "dbOps": [
+        {
+          "op": "aggregate products",
+          "calls": 100,
+          "avgMs": 105.76,
+          "maxMs": 430,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 279.04,
+          "maxMs": 2025,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "list-by-category",
+      "example": "/api/v1/products?category=toys&limit=20",
+      "requests": 279,
+      "ok": 279,
+      "errorRatePercent": 0,
+      "throughputRps": 13.55,
+      "meanMs": 735.15,
+      "p50Ms": 739.52,
+      "p95Ms": 854.5,
+      "p99Ms": 897.71,
+      "maxMs": 920.29,
+      "statuses": {
+        "200": 279
+      },
+      "dbOps": [
+        {
+          "op": "aggregate products",
+          "calls": 100,
+          "avgMs": 82.47,
+          "maxMs": 249,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 101.61,
+          "maxMs": 259,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "list-deep-page",
+      "example": "/api/v1/products?limit=20&page=2822",
+      "requests": 143,
+      "ok": 143,
+      "errorRatePercent": 0,
+      "throughputRps": 6.95,
+      "meanMs": 1417.14,
+      "p50Ms": 1426.43,
+      "p95Ms": 1609.04,
+      "p99Ms": 1701.19,
+      "maxMs": 1812.2,
+      "statuses": {
+        "200": 143
+      },
+      "dbOps": [
+        {
+          "op": "aggregate products",
+          "calls": 100,
+          "avgMs": 108.37,
+          "maxMs": 1976,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 335.44,
+          "maxMs": 2635,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "search-by-name",
+      "example": "/api/v1/products?q=headphones&limit=20",
+      "requests": 120,
+      "ok": 120,
+      "errorRatePercent": 0,
+      "throughputRps": 5.88,
+      "meanMs": 1695.4,
+      "p50Ms": 1689.35,
+      "p95Ms": 1847.14,
+      "p99Ms": 1895.43,
+      "maxMs": 1898.43,
+      "statuses": {
+        "200": 120
+      },
+      "dbOps": [
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 212.13,
+          "maxMs": 353,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "aggregate products",
+          "calls": 100,
+          "avgMs": 202,
+          "maxMs": 365,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    }
+  ]
+}

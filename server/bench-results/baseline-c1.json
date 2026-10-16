@@ -1,0 +1,62 @@
+{
+  "label": "baseline-c1",
+  "takenAt": "2026-10-16T07:32:32.939Z",
+  "environment": {
+    "node": "v22.22.0",
+    "platform": "win32 10.0.26100",
+    "cpu": "Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz x4",
+    "memoryGB": 16,
+    "mongodb": "8.0.5"
+  },
+  "workload": {
+    "concurrency": 1,
+    "warmupSeconds": 5,
+    "durationSeconds": 10,
+    "loop": "closed",
+    "readOnly": true
+  },
+  "dataset": {
+    "database": "inventory_bench",
+    "products": 100000
+  },
+  "results": [
+    {
+      "scenario": "list-first-page",
+      "example": "/api/v1/products?limit=20",
+      "requests": 57,
+      "ok": 57,
+      "errorRatePercent": 0,
+      "throughputRps": 5.58,
+      "meanMs": 179.14,
+      "p50Ms": 168.22,
+      "p95Ms": 240.41,
+      "p99Ms": 321.73,
+      "maxMs": 321.73,
+      "statuses": {
+        "200": 57
+      },
+      "dbOps": [
+        {
+          "op": "aggregate products",
+          "calls": 100,
+          "avgMs": 73.07,
+          "maxMs": 174,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        },
+        {
+          "op": "find products",
+          "calls": 100,
+          "avgMs": 193.39,
+          "maxMs": 753,
+          "avgDocsExamined": 100000,
+          "plans": [
+            "COLLSCAN"
+          ]
+        }
+      ]
+    }
+  ]
+}
